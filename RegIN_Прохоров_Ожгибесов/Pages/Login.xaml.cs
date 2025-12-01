@@ -24,5 +24,25 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         {
             InitializeComponent();
         }
+
+        private void SetPassword(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void OpenRegin(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void RecoveryPassword(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void SetLogin(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
