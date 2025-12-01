@@ -33,7 +33,7 @@ namespace RegIN_Прохоров_Ожгибесов.Elements
             CreateCapture();
         }
 
-        private void CreateCapture()
+        public void CreateCapture()
         {
             InputCapture.Text = "";
             Capture.Children.Clear();

@@ -16,6 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using RegIN_Прохоров_Ожгибесов.Classes;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
@@ -119,7 +120,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 {
                     if(MainWindow.mainWindow.UserLogIn.Password == TbPassword.Password)
                     {
-                        MainWindow.mainWindow.OpenPage(new Confirmation.TypeConfirmation.Login));
+                        MainWindow.mainWindow.OpenPage(new Confirmation(Confirmation.TypeConfirmation.Login));
                     }
                     else
                     {
@@ -142,19 +143,82 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 SetNotification($"Enter capture", Brushes.Red);
             }
         }
+
+        public void BlockAutorization()
+        {
+            DateTime StartBlock = DateTime.Now.AddMinutes(3);
+            Dispatcher.Invoke(() =>
+            {
+                TbLogin.IsEnabled = false;
+                TbPassword.IsEnabled = false;
+                Capture.IsEnabled = false;
+            });
+
+            for(int i = 0; i < 180; i++)
+            {
+                TimeSpan TimeIdle = StartBlock.Subtract(DateTime.Now);
+                string s_minutes = TimeIdle.Minutes.ToString();
+                if (TimeIdle.Minutes < 10)
+                    s_minutes = "0" + TimeIdle.Minutes;
+                string s_second = TimeIdle.Seconds.ToString();
+                if(TimeIdle.Seconds < 10)
+                
+                    s_second = "0" + TimeIdle.Seconds;
+
+                Dispatcher.Invoke(() =>
+                {
+                    SetNotification($"Reauthorization available in : {s_minutes}:{s_second}", Brushes.Red);
+                });
+                Thread.Sleep(1000);
+            }
+            Dispatcher.Invoke(() =>
+            {
+                SetNotification("Hi, " + MainWindow.mainWindow.UserLogIn.Name, Brushes.Black);
+                TbLogin.IsEnabled = true;
+                TbPassword.IsEnabled = true;
+                Capture.IsEnabled = true;
+                Capture.CreateCapture();
+                IsCapture = false;
+                CountSetPassword = 2;
+            });
+        }
         private void OpenRegin(object sender, MouseButtonEventArgs e)
         {
-
+            MainWindow.mainWindow.OpenPage(new Regin());
         }
 
         private void RecoveryPassword(object sender, MouseButtonEventArgs e)
         {
-
+            MainWindow.mainWindow.OpenPage(new Recovery());
         }
 
         private void SetLogin(object sender, RoutedEventArgs e)
         {
-
+            MainWindow.mainWindow.UserLogIn.GetUserLogin(TbLogin.Text);
+            if(TbPassword.Password.Length > 0)
+            {
+                SetPassword();
+            }
         }
+
+        private void SetLogin(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                MainWindow.mainWindow.UserLogIn.GetUserLogin(TbLogin.Text);
+
+                if(TbPassword.Password.Length > 0)
+                {
+                    SetPassword();
+                }
+            }
+        }
+
+        public void SetNotification(string Message,SolidColorBrush _Color)
+        {
+            LNameUser.Content = Message;
+            LNameUser.Foreground = _Color;
+        }
+
     }
 }
