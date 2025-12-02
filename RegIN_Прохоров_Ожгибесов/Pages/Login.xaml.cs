@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using RegIN_Прохоров_Ожгибесов.Classes;
+using RegIN_Прохоров_Ожгибесов.Pages;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
 {

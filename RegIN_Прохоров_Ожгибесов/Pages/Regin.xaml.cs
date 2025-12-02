@@ -17,7 +17,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
     /// <summary>
     /// Логика взаимодействия для Regin.xaml
     /// </summary>
-    public partial class Regin : Window
+    public partial class Regin : Page
     {
         public Regin()
         {
@@ -60,6 +60,11 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         }
 
         private void OpenLogin(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void OpenRegin(object sender, MouseButtonEventArgs e)
         {
 
         }
