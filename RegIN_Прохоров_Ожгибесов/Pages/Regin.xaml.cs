@@ -10,10 +10,18 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using Aspose.Imaging;
+using Aspose.Imaging.FileFormats.Png;
+using Aspose.Imaging.FileFormats.Jpeg;
+using Aspose.Imaging.ImageOptions;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using Image = Aspose.Imaging.Image;
+using Rectangle = Aspose.Imaging.Rectangle;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
 {
@@ -25,7 +33,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
         OpenFileDialog FileDialogImage = new OpenFileDialog();
         bool BCorrectLogin = false;
-        bool BCorrectPassword = false;  
+        bool BCorrectPassword = false;
         bool BcorrectConfirmPassword = false;
         bool BSetImage = false;
         public Regin()
@@ -40,14 +48,14 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         private void CorrectLogin()
         {
             SetNotification("lOGIN ALREADY IN USER", Brushes.Red);
-            BCorrectLogin = false ;
+            BCorrectLogin = false;
 
         }
         private void InCorrectLogin() =>
-            SetNotification ("",Brushes.Black);
+            SetNotification("", Brushes.Black);
         private void SetLogin(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 SetLogin();
             }
@@ -81,7 +89,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
         private void SetPassword(object sender, KeyEventArgs e)
         {
-           if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 SetPassword();
             }
@@ -110,7 +118,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
         private void ConfirmPassword(object sender, KeyEventArgs e)
         {
-           if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 ConfirmPassword();
             }
@@ -123,16 +131,16 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         public void ConfirmPassword(bool Pass = false)
         {
             BcorrectConfirmPassword = tbConfirmPassword.Password == TbPassword.Password;
-            if(tbConfirmPassword.Password != TbPassword.Password)
+            if (tbConfirmPassword.Password != TbPassword.Password)
             {
                 SetNotification("Passwords do not match", Brushes.Black);
-                if(!Pass) 
+                if (!Pass)
                     SetPassword();
             }
         }
         private void OpenLogin(object sender, MouseButtonEventArgs e)
         {
-
+            MainWindow.mainWindow.OpenPage(new Login());
         }
         void OnRegIn()
         {
@@ -162,10 +170,75 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         }
 
 
+
         public void SetNotification(string Message, SolidColorBrush _Color)
         {
             LNameUser.Content = Message;
             LNameUser.Foreground = _Color;
+        }
+
+        private void SelectImage(object sender, MouseButtonEventArgs e)
+        {
+            if (FileDialogImage.ShowDialog() == true)
+            {
+                using (Image image = Image.Load(FileDialogImage.FileName))
+                {
+                    int NewWidht = 0;
+                    int NewHeight = 0;
+                    if (image.Width > image.Height)
+                    {
+                        NewWidht = (int)(image.Width * (256f / image.Height));
+                        NewHeight = 256;
+                    }
+                    else
+                    {
+                        NewWidht = 256;
+                        NewHeight = (int)(image.Height * (256f / image.Width));
+                    }
+                }
+            }
+            using (RasterImage rasterImage = (RasterImage)Image.Load("User.jpg"))
+            {
+                if (!rasterImage.IsCached)
+                {
+                    rasterImage.CacheData();
+                }
+                int X = 0;
+                int Width = 256;
+                int Y = 0;
+                int Height = 256;
+
+                if (rasterImage.Width > rasterImage.Height)
+                {
+                    X = (int)((rasterImage.Width - 256F) / 2);
+                }
+                else
+                {
+                    Y = (int)((rasterImage.Height - 256F) / 2);
+                }
+
+                Rectangle rectangle = new Rectangle(X, Y, Width, Height);
+                rasterImage.Crop(rectangle);
+
+                rasterImage.Save("User.jpg");
+
+                DoubleAnimation StartAnimation = new DoubleAnimation();
+                StartAnimation.From = 1;
+                StartAnimation.To = 0;
+                StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
+                StartAnimation.Completed += delegate
+                {
+                    IUser.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + @"\User.jpg"));
+                    DoubleAnimation EndAnimation = new DoubleAnimation();
+                    EndAnimation.From = 0;
+                    EndAnimation.To = 1;
+                    EndAnimation.Duration = TimeSpan.FromSeconds(1.2);
+                    IUser.BeginAnimation(OpacityProperty, EndAnimation);
+                };
+
+                IUser.BeginAnimation(OpacityProperty, StartAnimation);
+                BSetImage = true;
+            }
         }
     }
 }
