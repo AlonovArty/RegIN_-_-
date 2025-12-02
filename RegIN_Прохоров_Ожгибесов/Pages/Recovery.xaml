@@ -58,13 +58,13 @@
                     VerticalAlignment="Top"
                     KeyUp="SetLogin"
                     LostFocus="SetLogin"/>
-                <!--<uc:ElementCapture
+                <uc:ElementCapture
                     x:Name="Capture"
                     HorizontalAlignment="Center"
                     Width="280"
                     Margin="10,213,10,0" 
                     Height="100"
-                    VerticalAlignment="Top"/>-->
+                    VerticalAlignment="Top"/>
                 <Label
                     Content="Enter password:"
                     Margin="10,318,10,0"
