@@ -15,10 +15,10 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
             var smptClient = new SmtpClient("smtp.yandex.ru")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("brenovc@yandex.ru", "pqstsmgvacsuqqxk"),
+                Credentials = new NetworkCredential("brenovc@yandex.ru", "jezhogmxcyeokfcy"),
                 EnableSsl = true,
             };
-            smptClient.Send("landaxer.yandex.ru",To, "Проект RegIn",Message);
+            smptClient.Send("brenovc@yandex.ru", To, "Проект RegIn",Message);
         }
     }
 }

@@ -20,8 +20,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
-using Image = Aspose.Imaging.Image;
-using Rectangle = Aspose.Imaging.Rectangle;
+using Imaging = Aspose.Imaging;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
 {
@@ -39,7 +38,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         public Regin()
         {
             InitializeComponent();
-            MainWindow.mainWindow.UserLogIn.HandlerInCorrectLogin += CorrectLogin;
+            MainWindow.mainWindow.UserLogIn.HandelCorrectLogin += CorrectLogin;
             MainWindow.mainWindow.UserLogIn.HandlerInCorrectLogin += InCorrectLogin;
             FileDialogImage.Filter = "PNG (*.png)|*.png|JPG (*.jpg)|*.jpg";
             FileDialogImage.RestoreDirectory = true;
@@ -67,7 +66,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         }
         public void SetLogin()
         {
-            Regex regex = new Regex(@"^([a-zA-Z0-9_-]{4,8}@{2,}.[a-zA-Z0-9_-]{2,})$");
+            Regex regex = new Regex(@"([a-zA-Z0-9._-]{4,}@[a-zA-Z-9._-]{2,}\.[a-zA-Z0-9_-]{2,})");
             BCorrectLogin = regex.IsMatch(TbLogin.Text);
             if (regex.IsMatch(TbLogin.Text) == true)
             {
@@ -101,7 +100,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         }
         public void SetPassword()
         {
-            Regex regex = new Regex(@"^(?=.[0-9])(?=.[!@#%^&*\-_]{10,}$");
+            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[!@#$%^&?*\-_=])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&?*\-_=]{10,}");
             BCorrectPassword = regex.IsMatch(TbPassword.Password);
             if (regex.IsMatch(TbPassword.Password) == true)
             {
@@ -133,7 +132,12 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
             BcorrectConfirmPassword = tbConfirmPassword.Password == TbPassword.Password;
             if (tbConfirmPassword.Password != TbPassword.Password)
             {
-                SetNotification("Passwords do not match", Brushes.Black);
+                SetNotification("Passwords do not match", Brushes.Red);
+               
+            }
+            else
+            {
+                SetNotification("", Brushes.Black);
                 if (!Pass)
                     SetPassword();
             }
@@ -157,7 +161,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
             MainWindow.mainWindow.UserLogIn.Name = TbName.Text;
 
             if (BSetImage)
-                MainWindow.mainWindow.UserLogIn.Image = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\User.jpg");
+                MainWindow.mainWindow.UserLogIn.Image = File.ReadAllBytes(Directory.GetCurrentDirectory() + @"\IUsers.jpg");
 
             MainWindow.mainWindow.UserLogIn.DateUpdate = DateTime.Now;
             MainWindow.mainWindow.UserLogIn.DateCreate = DateTime.Now;
@@ -181,7 +185,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         {
             if (FileDialogImage.ShowDialog() == true)
             {
-                using (Image image = Image.Load(FileDialogImage.FileName))
+                using (Imaging.Image image = Imaging.Image.Load(FileDialogImage.FileName))
                 {
                     int NewWidht = 0;
                     int NewHeight = 0;
@@ -195,9 +199,11 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                         NewWidht = 256;
                         NewHeight = (int)(image.Height * (256f / image.Width));
                     }
+                    image.Resize(NewWidht, NewHeight);
+                    image.Save("IUsers.jpg");
                 }
             }
-            using (RasterImage rasterImage = (RasterImage)Image.Load("User.jpg"))
+            using (Imaging.RasterImage rasterImage = (Imaging.RasterImage)Imaging.Image.Load("IUsers.jpg"))
             {
                 if (!rasterImage.IsCached)
                 {
@@ -217,10 +223,10 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                     Y = (int)((rasterImage.Height - 256F) / 2);
                 }
 
-                Rectangle rectangle = new Rectangle(X, Y, Width, Height);
+                Imaging.Rectangle rectangle = new Imaging.Rectangle(X, Y, Width, Height);
                 rasterImage.Crop(rectangle);
 
-                rasterImage.Save("User.jpg");
+                rasterImage.Save("IUsers.jpg");
 
                 DoubleAnimation StartAnimation = new DoubleAnimation();
                 StartAnimation.From = 1;
@@ -228,7 +234,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
                 StartAnimation.Completed += delegate
                 {
-                    IUser.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + @"\User.jpg"));
+                    IUser.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + @"\IUsers.jpg"));
                     DoubleAnimation EndAnimation = new DoubleAnimation();
                     EndAnimation.From = 0;
                     EndAnimation.To = 1;

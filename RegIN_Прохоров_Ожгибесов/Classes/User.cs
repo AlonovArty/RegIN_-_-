@@ -31,7 +31,7 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
             MySqlConnection mySqlConnection = WorkingDB.OpenConnection();
             if (WorkingDB.OpenConnection(mySqlConnection))
             {
-                MySqlDataReader userQuery = WorkingDB.Query($"SELECT * FROM 'users' WHERE 'Login' = '{Login}'", mySqlConnection);
+                MySqlDataReader userQuery = WorkingDB.Query($"SELECT * FROM `users` WHERE `Login` = '{Login}'", mySqlConnection);
                 if (userQuery.HasRows)
                 {
                     userQuery.Read();
@@ -88,7 +88,7 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
                 MySqlConnection mySqlConnection = WorkingDB.OpenConnection();
                 if (WorkingDB.OpenConnection(mySqlConnection))
                 {
-                    WorkingDB.Query($"UPDATE 'users' SET 'Password'='{this.Password}' WHERE 'Login' = {this.Login}'",mySqlConnection);
+                    WorkingDB.Query($"UPDATE `users` SET `Password` = '{this.Password}' WHERE `Login` = '{this.Login}'", mySqlConnection);
                 }
                 WorkingDB.CloseConnection(mySqlConnection);
                 SendMail.SendMessage($"Your account password has been changed.\n New password {this.Password}",this.Login);

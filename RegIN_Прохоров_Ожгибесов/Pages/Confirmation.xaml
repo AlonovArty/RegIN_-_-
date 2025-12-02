@@ -45,7 +45,7 @@
                     Content="A message has been sent to your email."
                     VerticalAlignment="Top"/>
                 <Label
-                    Content="Enter login:"
+                    Content="Enter code:"
                     Margin="10,161,10,0"
                     VerticalAlignment="Top"/>
                 <TextBox
@@ -59,8 +59,8 @@
                     LostFocus="SetCode"/>
                 <Label
                     x:Name="LTimer"
-                    Content="Back"
-                    Margin="0,318,10,0"
+                    Content=""
+                    Margin="10,213,10,0"
                     VerticalAlignment="Top"
                     Foreground="#FF673AB7"
                     FontSize="12"/>

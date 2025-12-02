@@ -36,7 +36,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         {
             InitializeComponent();
 
-            MainWindow.mainWindow.UserLogIn.HandlerInCorrectLogin += CorrectLogin;
+            MainWindow.mainWindow.UserLogIn.HandelCorrectLogin += CorrectLogin;
             MainWindow.mainWindow.UserLogIn.HandlerInCorrectLogin += InCorrectLogin;
 
             Capture.HandlerCorrectCapture += CorrectCapture;
@@ -100,7 +100,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
                 StartAnimation.Completed += delegate
                 {
-                    IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/ic-user.png"));
+                    IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/users.jpg"));
 
                     DoubleAnimation EndAnimation = new DoubleAnimation();
                     EndAnimation.From = 0;
@@ -140,13 +140,13 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
             {
                 if (MainWindow.mainWindow.UserLogIn.Password != String.Empty)
                 {
-                    DoubleAnimation StartAnimation = new DoubleAnimation();
+                    DoubleAnimation StartAnimation = new DoubleAnimation(); 
                     StartAnimation.From = 1;
                     StartAnimation.To = 0;
                     StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
                     StartAnimation.Completed += delegate
                     {
-                        IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/ic-mail.png"));
+                        IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/gmail.png"));
 
                         DoubleAnimation EndAnimation = new DoubleAnimation();
                         EndAnimation.From = 0;
