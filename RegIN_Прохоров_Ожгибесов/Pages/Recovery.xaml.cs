@@ -133,6 +133,47 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
         private void SetLogin(object sender, RoutedEventArgs e) =>
             MainWindow.mainWindow.UserLogIn.GetUserLogin(TbLogin.Text);
-        
+
+        private void SendNewPassword()
+        {
+            if (IsCapture)
+            {
+                if (MainWindow.mainWindow.UserLogIn.Password != String.Empty)
+                {
+                    DoubleAnimation StartAnimation = new DoubleAnimation();
+                    StartAnimation.From = 1;
+                    StartAnimation.To = 0;
+                    StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
+                    StartAnimation.Completed += delegate
+                    {
+                        IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/ic-mail.png"));
+
+                        DoubleAnimation EndAnimation = new DoubleAnimation();
+                        EndAnimation.From = 0;
+                        EndAnimation.To = 1;
+                        EndAnimation.Duration = TimeSpan.FromSeconds(1.2);
+
+                        IUser.BeginAnimation(Image.OpacityProperty, EndAnimation);
+                    };
+
+                    IUser.BeginAnimation(Image.OpacityProperty, StartAnimation);
+
+                    SetNotification("An email has been sent to your email.", Brushes.Black);
+
+                    MainWindow.mainWindow.UserLogIn.CrateNewPassword();
+                }
+            }
+        }
+
+        public void SetNotification(string Message, SolidColorBrush _Color)
+        {
+            LNameUser.Content = Message;
+            LNameUser.Foreground = _Color;
+        }
+
+        private void OpenLogin(object sender, MouseButtonEventArgs e)
+        {
+            MainWindow.mainWindow.OpenPage(new Login());
+        }
     }
 }
