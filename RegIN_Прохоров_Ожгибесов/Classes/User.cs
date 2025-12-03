@@ -11,10 +11,15 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
         public string Password { get; set; }
         public string Name { get; set; }
         public byte[] Image = new byte[0];
+        public string Pincode { get; set; }
         public DateTime DateUpdate { get; set; }
         public DateTime DateCreate { get; set; }
+
+        public bool HasPin => !string.IsNullOrEmpty(Pincode);
+
         public CorrectLogin HandelCorrectLogin;
         public InCorrectLogin HandlerInCorrectLogin;
+
         public delegate void CorrectLogin();
         public delegate void InCorrectLogin();
         public void GetUserLogin(string Login)
@@ -23,7 +28,7 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
             this.Login = String.Empty;
             Password = String.Empty;
             Name = String.Empty;
-            Image = new byte[0];
+            this.Image = new byte[0];
 
             MySqlConnection mySqlConnection = WorkingDB.OpenConnection();
             if (WorkingDB.OpenConnection(mySqlConnection))
@@ -34,13 +39,17 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
                 {
                     userQuery.Read();
                     Id = userQuery.GetInt32(0);
-                    Login = userQuery.GetString(1);
+                    this.Login = userQuery.GetString(1);
+                    this.Name = userQuery.GetString(3);
                     Password = userQuery.GetString(2);
-                    userQuery.GetString(3);
                     if (!userQuery.IsDBNull(4))
                     {
-                        Image = new byte[64 * 1024];
+                        this.Image = new byte[64 * 1024];
                         userQuery.GetBytes(4, 0, Image, 0, Image.Length);
+                    }
+                    if (!userQuery.IsDBNull(7))
+                    {
+                        Pincode = userQuery.GetString(7);
                     }
                     DateUpdate = userQuery.GetDateTime(5);
                     DateCreate = userQuery.GetDateTime(6);
@@ -51,6 +60,7 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
             }
             else
                 HandlerInCorrectLogin.Invoke();
+
             WorkingDB.CloseConnection(mySqlConnection);
         }
 
@@ -64,7 +74,7 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
                 mySqlCommand.Parameters.AddWithValue("@Login", this.Login);
                 mySqlCommand.Parameters.AddWithValue("@Password", Password);
                 mySqlCommand.Parameters.AddWithValue("@Name", Name);
-                mySqlCommand.Parameters.AddWithValue("@Image", Image);
+                mySqlCommand.Parameters.AddWithValue("@Image", this.Image);
                 mySqlCommand.Parameters.AddWithValue("@DateUpdate", DateUpdate);
                 mySqlCommand.Parameters.AddWithValue("@DateCreate", DateCreate);
           
@@ -86,6 +96,18 @@ namespace RegIN_Прохоров_Ожгибесов.Classes
                 WorkingDB.CloseConnection(mySqlConnection);
                 SendMail.SendMessage($"Your account password has been changed.\n New password {Password}",this.Login);
             }
+        }
+
+        public void SetPin(string pin)
+        {
+            MySqlConnection mySqlConnection = WorkingDB.OpenConnection();
+
+            if (WorkingDB.OpenConnection(mySqlConnection))
+            {
+                WorkingDB.Query($"UPDATE `users` SET `Pincode` = '{pin}' WHERE `Login` = '{this.Login}'", mySqlConnection);
+            }
+            WorkingDB.CloseConnection(mySqlConnection);
+            SendMail.SendMessage($"Your account password has been changed.\n New password {Password}", this.Login);
         }
 
         public string GeneratePass()

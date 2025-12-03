@@ -20,6 +20,8 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         TypeConfirmation ThisTypeConfirmation;
 
         public int Code = 0;
+        private int couldown = 30;
+
         public Confirmation(TypeConfirmation typeConfirmation)
         {
             InitializeComponent();
@@ -31,6 +33,8 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
         public void SendMailCode()
         {
+           
+
             Code = new Random().Next(100000, 999999);
             Classes.SendMail.SendMessage($"Login code: {Code}", MainWindow.mainWindow.UserLogIn.Login);
 
@@ -82,7 +86,12 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 TbCode.IsEnabled = false;
 
                 if (ThisTypeConfirmation == TypeConfirmation.Login)
+                {
                     MessageBox.Show("Авторизация пользователя успешно подтверждена.");
+
+                    MainWindow.mainWindow.OpenPage(new Pin(false));
+                }
+                    
                 else
                 {
                     MainWindow.mainWindow.UserLogIn.SetUser();

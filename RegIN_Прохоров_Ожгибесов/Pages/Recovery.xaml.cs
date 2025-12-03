@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
 {
@@ -46,53 +37,24 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         {
             if (OldLogin != TbLogin.Text)
             {
-                SetNotification("Hi, " + MainWindow.mainWindow.UserLogIn.Name, Brushes.Black);
-
-                try
-                {
-                    BitmapImage biImg = new BitmapImage();
-                    MemoryStream ms = new MemoryStream(MainWindow.mainWindow.UserLogIn.Image);
-
-                    biImg.BeginInit();
-                    biImg.StreamSource = ms;
-                    biImg.EndInit();
-
-                    ImageSource imgSrc = biImg;
-
-                    DoubleAnimation StartAnimation = new DoubleAnimation();
-                    StartAnimation.From = 1;
-                    StartAnimation.To = 0;
-                    StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
-                    StartAnimation.Completed += delegate
-                    {
-                        IUser.Source = imgSrc;
-
-                        DoubleAnimation EndAnimation = new DoubleAnimation();
-                        EndAnimation.From = 0;
-                        EndAnimation.To = 1;
-                        EndAnimation.Duration = TimeSpan.FromSeconds(1.2);
-
-                        IUser.BeginAnimation(Image.OpacityProperty, EndAnimation);
-                    };
-
-                    IUser.BeginAnimation(Image.OpacityProperty, StartAnimation);
-                }
-                catch (Exception ex) 
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-
                 OldLogin = TbLogin.Text;
 
+                SetNotification("Hi, " + MainWindow.mainWindow.UserLogIn.Name, Brushes.Black);
+                SetAnim();
                 SendNewPassword();
             }
         }
 
-        private void InCorrectLogin()
+        private void SetAnim()
         {
-            if (LNameUser.Content != "")
+            try
             {
-               LNameUser.Content = string.Empty;
+                BitmapImage biImg = new BitmapImage();
+                MemoryStream ms = new MemoryStream(MainWindow.mainWindow.UserLogIn.Image);
+
+                biImg.BeginInit();
+                biImg.StreamSource = ms;
+                biImg.EndInit();
 
                 DoubleAnimation StartAnimation = new DoubleAnimation();
                 StartAnimation.From = 1;
@@ -100,7 +62,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
                 StartAnimation.Completed += delegate
                 {
-                    IUser.Source = new BitmapImage(new Uri("pack://application:,,,/Images/users.jpg"));
+                    SetImage(biImg);
 
                     DoubleAnimation EndAnimation = new DoubleAnimation();
                     EndAnimation.From = 0;
@@ -111,6 +73,46 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 };
 
                 IUser.BeginAnimation(Image.OpacityProperty, StartAnimation);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void SetImage(ImageSource imgSrc)
+        {
+            IUser.Source = imgSrc;
+        }
+
+        private void ResetImage()
+        {
+            DoubleAnimation StartAnimation = new DoubleAnimation();
+            StartAnimation.From = 1;
+            StartAnimation.To = 0;
+            StartAnimation.Duration = TimeSpan.FromSeconds(0.6);
+            StartAnimation.Completed += delegate
+            {
+                SetImage(new BitmapImage(new Uri("pack://application:,,,/Images/users.jpg")));
+
+                DoubleAnimation EndAnimation = new DoubleAnimation();
+                EndAnimation.From = 0;
+                EndAnimation.To = 1;
+                EndAnimation.Duration = TimeSpan.FromSeconds(1.2);
+
+                IUser.BeginAnimation(Image.OpacityProperty, EndAnimation);
+            };
+
+            IUser.BeginAnimation(Image.OpacityProperty, StartAnimation);
+        }
+
+        private void InCorrectLogin()
+        {
+            if (LNameUser.Content.ToString() != "")
+            {
+               LNameUser.Content = string.Empty;
+
+                ResetImage();
             }
 
             if (TbLogin.Text.Length > 0)

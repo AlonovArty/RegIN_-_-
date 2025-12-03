@@ -123,7 +123,10 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 {
                     if(MainWindow.mainWindow.UserLogIn.Password == TbPassword.Password)
                     {
-                        MainWindow.mainWindow.OpenPage(new Confirmation(Confirmation.TypeConfirmation.Login));
+                        if (!MainWindow.mainWindow.UserLogIn.HasPin)
+                            MainWindow.mainWindow.OpenPage(new Confirmation(Confirmation.TypeConfirmation.Login));
+                        else
+                            MainWindow.mainWindow.OpenPage(new Pin(true));
                     }
                     else
                     {
@@ -221,6 +224,5 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
             LNameUser.Content = Message;
             LNameUser.Foreground = _Color;
         }
-
     }
 }

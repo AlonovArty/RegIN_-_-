@@ -26,8 +26,10 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         public Regin()
         {
             InitializeComponent();
+
             MainWindow.mainWindow.UserLogIn.HandelCorrectLogin += CorrectLogin;
             MainWindow.mainWindow.UserLogIn.HandlerInCorrectLogin += InCorrectLogin;
+
             FileDialogImage.Filter = "PNG (*.png)|*.png|JPG (*.jpg)|*.jpg";
             FileDialogImage.RestoreDirectory = true;
             FileDialogImage.Title = "Choose a phoro for your avatar";
@@ -43,15 +45,12 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         private void SetLogin(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {
                 SetLogin();
-            }
+            
         }
-
-        private void SetLogin(object sender, RoutedEventArgs e)
-        {
+        private void SetLogin(object sender, RoutedEventArgs e) =>
             SetLogin();
-        }
+        
         public void SetLogin()
         {
             Regex regex = new Regex(@"([a-zA-Z0-9._-]{4,}@[a-zA-Z-9._-]{2,}\.[a-zA-Z0-9_-]{2,})");
@@ -62,9 +61,8 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 MainWindow.mainWindow.UserLogIn.GetUserLogin(TbLogin.Text);
             }
             else
-            {
-                SetNotification("Invalid login", Brushes.Red);
-            }
+               SetNotification("Invalid login", Brushes.Red);
+            
 
             OnRegIn();
         }
@@ -98,9 +96,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 OnRegIn();
             }
             else
-            {
                 SetNotification("Invalid password", Brushes.Red);
-            }
         }
 
         private void ConfirmPassword(object sender, KeyEventArgs e)
@@ -119,10 +115,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         {
             BcorrectConfirmPassword = tbConfirmPassword.Password == TbPassword.Password;
             if (tbConfirmPassword.Password != TbPassword.Password)
-            {
                 SetNotification("Passwords do not match", Brushes.Red);
-               
-            }
             else
             {
                 SetNotification("", Brushes.Black);
@@ -156,12 +149,6 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
 
             MainWindow.mainWindow.OpenPage(new Confirmation(Confirmation.TypeConfirmation.Regin));
         }
-        private void OpenRegin(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-
 
         public void SetNotification(string Message, SolidColorBrush _Color)
         {
@@ -233,6 +220,11 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
                 IUser.BeginAnimation(OpacityProperty, StartAnimation);
                 BSetImage = true;
             }
+        }
+
+        private void OpenRegin(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
