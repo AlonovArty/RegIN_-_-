@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RegIN_Прохоров_Ожгибесов.Elements
 {
@@ -22,62 +13,60 @@ namespace RegIN_Прохоров_Ожгибесов.Elements
     {
         public CorrectCapture HandlerCorrectCapture;
         public delegate void CorrectCapture();
-        string StrCapture = "";
+
+        string StrCapture;
         int ElementWidth = 280;
         int ElementHeight = 50;
 
+        private static readonly Random rnd = new Random();  
 
         public ElementCapture()
         {
             InitializeComponent();
-            CreateCapture();
+
+            InputCapture.MaxLength = 4;
+
+            GenerateCaptcha();
         }
 
-        public void CreateCapture()
+        public void GenerateCaptcha()
         {
             InputCapture.Text = "";
             Capture.Children.Clear();
             StrCapture = "";
-            CreateBackground();
-            Background();
-        }
 
-        private void CreateBackground()
-        {
-            Random ThisRandom = new Random();
-            for(int i = 0; i < 100; i++)
+            for (int i = 0; i < 80; i++)
             {
-                int back  = ThisRandom.Next(0,10);
                 Label Lbackground = new Label()
                 {
-                    Content = back,
-                    FontSize = ThisRandom.Next(10, 16),
-                    FontWeight = FontWeights.Bold,
-                    Foreground = new SolidColorBrush(Color.FromArgb(100, (byte)ThisRandom.Next(0, 255), (byte)ThisRandom.Next(0, 255), (byte)ThisRandom.Next(0, 255))),
-                    Margin = new Thickness(ThisRandom.Next(0,ElementWidth-20), ThisRandom.Next(0, ElementHeight - 20), 0,0)
+                   Content = rnd.Next(0, 10),
+                   FontSize = rnd.Next(10, 16),
+                   FontWeight = FontWeights.Bold,
+                   Foreground = new SolidColorBrush(Color.FromArgb(100, (byte)rnd.Next(0, 255), (byte)rnd.Next(0, 255), (byte)rnd.Next(0, 255))),
+                   Margin = new Thickness(rnd.Next(0,ElementWidth-20), rnd.Next(0, ElementHeight - 20), 0,0)
                 };
                 Capture.Children.Add(Lbackground);
             }
-        }
 
-        void Background()
-        {
-            Random ThisRandom = new Random();
             for (int i = 0; i < 4; i++)
             {
-                int back = ThisRandom.Next(0, 10);
+                char c = (char)('0' + rnd.Next(0, 10));
+                StrCapture += c;
+
                 Label lCode = new Label()
                 {
-                    Content = back,
+                    Content = c,
                     FontSize = 30,
                     FontWeight = FontWeights.Bold,
-                    Foreground = new SolidColorBrush(Color.FromArgb(255, (byte)ThisRandom.Next(0, 255),
-                    (byte)ThisRandom.Next(0, 255), (byte)ThisRandom.Next(0,255))),
-                    Margin = new Thickness(ElementWidth/2-60+i*30,ThisRandom.Next(-10,10),0,0)
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, (byte)rnd.Next(0, 255),
+                    (byte)rnd.Next(0, 255), (byte)rnd.Next(0, 255))),
+                    Margin = new Thickness(ElementWidth / 2 - 60 + i * 30, rnd.Next(-10, 10), 0, 0)
                 };
-                StrCapture += back.ToString();
+
                 Capture.Children.Add(lCode);
             }
+
+            InputCapture.Focus();
         }
 
         public bool OnCapture()
@@ -89,7 +78,7 @@ namespace RegIN_Прохоров_Ожгибесов.Elements
         {
             if (InputCapture.Text.Length == 4)
                 if (!OnCapture())
-                    CreateCapture();
+                    GenerateCaptcha();
                 else if (HandlerCorrectCapture != null)
                     HandlerCorrectCapture.Invoke();
         }

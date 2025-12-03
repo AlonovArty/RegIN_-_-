@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegIN_Прохоров_Ожгибесов.Classes
 {
     public class SendMail
     {
-        public static void SendMessage(string Message,string To)
+        public static void SendMessage(string Message, string To)
         {
             var smptClient = new SmtpClient("smtp.yandex.ru")
             {

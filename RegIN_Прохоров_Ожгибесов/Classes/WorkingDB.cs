@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
 
 namespace RegIN_Прохоров_Ожгибесов.Classes
 {
     public class WorkingDB
     {
-        readonly static string connection = "server=127.0.0.1;port=3306;database=regin;user=root;pwd=";
+        readonly static string connection = "server=localhost;port=3306;database=regin;user=root;pwd=";
 
         public static MySqlConnection OpenConnection()
         {

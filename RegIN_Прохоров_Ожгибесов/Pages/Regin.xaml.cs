@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
-using Aspose.Imaging;
-using Aspose.Imaging.FileFormats.Png;
-using Aspose.Imaging.FileFormats.Jpeg;
-using Aspose.Imaging.ImageOptions;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 using Imaging = Aspose.Imaging;
 
 namespace RegIN_Прохоров_Ожгибесов.Pages
@@ -100,7 +88,7 @@ namespace RegIN_Прохоров_Ожгибесов.Pages
         }
         public void SetPassword()
         {
-            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[!@#$%^&?*\-_=])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&?*\-_=]{10,}");
+            Regex regex = new Regex(@"(?=.*[0-9])(?=.*[!@#$%^&?*_=-])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&?*_=-]{10,}");
             BCorrectPassword = regex.IsMatch(TbPassword.Password);
             if (regex.IsMatch(TbPassword.Password) == true)
             {
